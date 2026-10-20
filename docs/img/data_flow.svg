@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6770"/>
+    </marker>
+    <marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+    </marker>
+    <style>
+      .b{fill:#fff;stroke:#c9d2d7;stroke-width:1.5}
+      .src{fill:#f2f2f0;stroke:#8a8983}
+      .pipe{fill:#eef4fb;stroke:#2a78d6}
+      .wh{fill:#2a78d6;stroke:#2a78d6}
+      .use{fill:#fdf1ec;stroke:#eb6834}
+      .t{font-size:14px;font-weight:600;fill:#22313a}
+      .s{font-size:11.5px;fill:#5b6770}
+      .l{stroke:#5b6770;stroke-width:1.5;fill:none;marker-end:url(#a)}
+      .d{stroke:#eb6834;stroke-width:1.5;fill:none;marker-end:url(#o);stroke-dasharray:5 4}
+    </style>
+  </defs>
+  <rect width="1000" height="470" rx="14" fill="#f8fafb"/>
+  <text x="24" y="34" font-size="18" font-weight="700" fill="#22313a">How the data flows: four separate systems in, one set of figures out</text>
+
+  <!-- sources -->
+  <text x="24" y="66" font-size="12" font-weight="700" fill="#8a8983">TODAY'S SEPARATE SYSTEMS</text>
+  <rect class="b src" x="24" y="78" width="200" height="72" rx="9"/>
+  <text class="t" x="36" y="100">Job tracker</text>
+  <text class="s" x="36" y="119">size, scope, tender hours;</text>
+  <text class="s" x="36" y="135">sq ft or m², £ or €</text>
+  <rect class="b src" x="24" y="162" width="200" height="72" rx="9"/>
+  <text class="t" x="36" y="184">Timesheets</text>
+  <text class="s" x="36" y="203">weekly hours per operative; job</text>
+  <text class="s" x="36" y="219">code typed four different ways</text>
+  <rect class="b src" x="24" y="246" width="200" height="72" rx="9"/>
+  <text class="t" x="36" y="268">Purchasing</text>
+  <text class="s" x="36" y="287">order lines with free-text items,</text>
+  <text class="s" x="36" y="303">drums, boxes and lengths</text>
+  <rect class="b src" x="24" y="330" width="200" height="72" rx="9"/>
+  <text class="t" x="36" y="352">Business Central</text>
+  <text class="s" x="36" y="371">jobs and costs via OData API;</text>
+  <text class="s" x="36" y="387">its own job numbers</text>
+
+  <!-- pipeline -->
+  <text x="276" y="66" font-size="12" font-weight="700" fill="#2a78d6">INTEGRATION PIPELINE</text>
+  <rect class="b pipe" x="276" y="78" width="250" height="324" rx="9"/>
+  <text class="t" x="292" y="104">1. Extract</text>
+  <text class="s" x="292" y="122">files + paged, incremental API sync</text>
+  <text class="t" x="292" y="160">2. Clean</text>
+  <text class="s" x="292" y="178">units, dates, currency, duplicates,</text>
+  <text class="s" x="292" y="194">negative hours</text>
+  <text class="t" x="292" y="232">3. Match</text>
+  <text class="s" x="292" y="250">one job key across every system;</text>
+  <text class="s" x="292" y="266">items mapped to a material list</text>
+  <text class="t" x="292" y="304">4. Load + check</text>
+  <text class="s" x="292" y="322">star schema in SQL; every rule</text>
+  <text class="s" x="292" y="338">that fired is logged and counted</text>
+  <rect x="292" y="356" width="218" height="34" rx="6" fill="#fdf1ec" stroke="#eb6834"/>
+  <text class="s" x="302" y="377" style="fill:#c4501f">unsure items go to a review queue</text>
+
+  <!-- warehouse -->
+  <rect class="b wh" x="578" y="170" width="150" height="140" rx="9"/>
+  <text class="t" x="653" y="204" text-anchor="middle" style="fill:#fff">SQL warehouse</text>
+  <text class="s" x="653" y="228" text-anchor="middle" style="fill:#e3eefb">jobs, trades, materials</text>
+  <text class="s" x="653" y="246" text-anchor="middle" style="fill:#e3eefb">labour, purchases, costs</text>
+  <text class="s" x="653" y="272" text-anchor="middle" style="fill:#e3eefb">one version of</text>
+  <text class="s" x="653" y="288" text-anchor="middle" style="fill:#e3eefb">the truth</text>
+
+  <!-- uses -->
+  <text x="776" y="66" font-size="12" font-weight="700" fill="#eb6834">WHAT IT POWERS</text>
+  <rect class="b use" x="776" y="78" width="200" height="88" rx="9"/>
+  <text class="t" x="788" y="100">Dashboards</text>
+  <text class="s" x="788" y="119">Power BI and KPI cards:</text>
+  <text class="s" x="788" y="135">hours per m², tender accuracy,</text>
+  <text class="s" x="788" y="151">spend by material</text>
+  <rect class="b use" x="776" y="184" width="200" height="88" rx="9"/>
+  <text class="t" x="788" y="206">Prediction model</text>
+  <text class="s" x="788" y="225">labour and materials for a</text>
+  <text class="s" x="788" y="241">new job, with a likely range,</text>
+  <text class="s" x="788" y="257">learned from past jobs</text>
+  <rect class="b use" x="776" y="290" width="200" height="88" rx="9"/>
+  <text class="t" x="788" y="312">Estimator app</text>
+  <text class="s" x="788" y="331">enter a job, see the forecast</text>
+  <text class="s" x="788" y="347">and the similar past jobs</text>
+  <text class="s" x="788" y="363">behind it</text>
+
+  <!-- arrows -->
+  <path class="l" d="M224,114 L272,150"/>
+  <path class="l" d="M224,198 L272,210"/>
+  <path class="l" d="M224,282 L272,270"/>
+  <path class="l" d="M224,366 L272,330"/>
+  <path class="l" d="M526,240 L574,240"/>
+  <path class="l" d="M728,205 L772,122"/>
+  <path class="l" d="M728,230 L772,228"/>
+  <path class="l" d="M876,272 L876,286"/>
+  <path class="d" d="M876,378 C876,440 160,440 124,406"/>
+  <text class="s" x="420" y="452" style="fill:#c4501f">planned: forecasts written back to Business Central as job budget lines</text>
+</svg>

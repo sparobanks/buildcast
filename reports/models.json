@@ -1,0 +1,201 @@
+{
+  "jobs": {
+    "train (started before 2023)": 652,
+    "calibration (2023)": 101,
+    "test (2024 onwards)": 254
+  },
+  "targets": {
+    "electrical_hours": {
+      "unit": "hours",
+      "test_jobs": 217,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 10.4,
+        "log-linear": 10.3
+      },
+      "model": {
+        "median_error_pct": 10.1,
+        "within_10pct": 0.498,
+        "range_covers_actual": 0.88,
+        "range_width_pct": 42.0
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 20.3,
+        "within_10pct": 0.263
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 16.6,
+        "within_10pct": 0.3
+      },
+      "tender estimate (estimating team)": {
+        "median_error_pct": 18.1,
+        "within_10pct": 0.309
+      }
+    },
+    "mechanical_hours": {
+      "unit": "hours",
+      "test_jobs": 194,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 13.3,
+        "log-linear": 11.6
+      },
+      "model": {
+        "median_error_pct": 10.0,
+        "within_10pct": 0.5,
+        "range_covers_actual": 0.902,
+        "range_width_pct": 54.0
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 26.8,
+        "within_10pct": 0.206
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 20.4,
+        "within_10pct": 0.242
+      },
+      "tender estimate (estimating team)": {
+        "median_error_pct": 20.6,
+        "within_10pct": 0.32
+      }
+    },
+    "cable_m": {
+      "unit": "m",
+      "test_jobs": 217,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 9.0,
+        "log-linear": 7.7
+      },
+      "model": {
+        "median_error_pct": 8.4,
+        "within_10pct": 0.594,
+        "range_covers_actual": 0.908,
+        "range_width_pct": 38.6
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 11.6,
+        "within_10pct": 0.461
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 9.6,
+        "within_10pct": 0.521
+      }
+    },
+    "containment_m": {
+      "unit": "m",
+      "test_jobs": 217,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 12.0,
+        "log-linear": 8.1
+      },
+      "model": {
+        "median_error_pct": 7.9,
+        "within_10pct": 0.627,
+        "range_covers_actual": 0.903,
+        "range_width_pct": 39.4
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 9.6,
+        "within_10pct": 0.521
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 10.0,
+        "within_10pct": 0.507
+      }
+    },
+    "light_fittings": {
+      "unit": "no.",
+      "test_jobs": 217,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 7.4,
+        "log-linear": 6.6
+      },
+      "model": {
+        "median_error_pct": 7.5,
+        "within_10pct": 0.659,
+        "range_covers_actual": 0.968,
+        "range_width_pct": 47.1
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 7.8,
+        "within_10pct": 0.599
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 9.0,
+        "within_10pct": 0.562
+      }
+    },
+    "pipework_m": {
+      "unit": "m",
+      "test_jobs": 194,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 11.2,
+        "log-linear": 8.1
+      },
+      "model": {
+        "median_error_pct": 6.8,
+        "within_10pct": 0.644,
+        "range_covers_actual": 0.933,
+        "range_width_pct": 45.5
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 10.8,
+        "within_10pct": 0.474
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 9.5,
+        "within_10pct": 0.521
+      }
+    },
+    "ductwork_m2": {
+      "unit": "m2",
+      "test_jobs": 194,
+      "model_chosen": "log-linear",
+      "calibration_mdape": {
+        "gradient boosting": 10.2,
+        "log-linear": 7.4
+      },
+      "model": {
+        "median_error_pct": 7.6,
+        "within_10pct": 0.608,
+        "range_covers_actual": 0.933,
+        "range_width_pct": 41.4
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 10.1,
+        "within_10pct": 0.495
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 10.4,
+        "within_10pct": 0.474
+      }
+    },
+    "sprinkler_heads": {
+      "unit": "no.",
+      "test_jobs": 124,
+      "model_chosen": "gradient boosting",
+      "calibration_mdape": {
+        "gradient boosting": 7.6,
+        "log-linear": 8.0
+      },
+      "model": {
+        "median_error_pct": 11.0,
+        "within_10pct": 0.46,
+        "range_covers_actual": 0.839,
+        "range_width_pct": 44.5
+      },
+      "rate per m2 by sector": {
+        "median_error_pct": 9.9,
+        "within_10pct": 0.508
+      },
+      "average of 5 similar past jobs": {
+        "median_error_pct": 11.2,
+        "within_10pct": 0.427
+      }
+    }
+  }
+}

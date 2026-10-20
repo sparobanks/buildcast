@@ -1,0 +1,17 @@
+description,material,units_per_order_unit
+data cbl cat 6a u/ftp 500m reel,cable_m,500.0
+fire resistant fp200 2c 1.5,cable_m,1.0
+lv armoured cbl 4c 16mm,cable_m,1.0
+plenum box fabrication,ductwork_m2,1.0
+galv spiral 315 dia,ductwork_m2,1.0
+trunkin galv 75x75,containment_m,1.0
+unistrut channel 41x41 3mtr,containment_m,3.0
+ladder rack 450 wide 3m lgth,containment_m,3.0
+cu tube 28mm x 3m,pipework_m,3.0
+pe-x barrier tubing 16mm 100m,pipework_m,100.0
+press-fit carbon steel 35mm 6m,pipework_m,6.0
+wall light ip44 opal,light_fittings,1.0
+emerg. luminaire maintained 3h,light_fittings,1.0
+recessed troffer 1200x300,light_fittings,1.0
+sprinker hd pendant chrome,sprinkler_heads,1.0
+spklr upright 68 deg,sprinkler_heads,1.0

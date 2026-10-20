@@ -1,0 +1,21 @@
+// BuildCast KPI measures for Power BI. Relationships are listed in powerbi/README.md.
+
+Labour Hours = SUM ( fact_labour[hours] )
+
+Floor Area m2 = SUM ( dim_job[gia_m2] )
+
+Labour Hours per m2 = DIVIDE ( [Labour Hours], [Floor Area m2] )
+
+Tender Labour Hours = SUM ( dim_job[tender_electrical_hours] ) + SUM ( dim_job[tender_mechanical_hours] )
+
+Actual vs Tender % = DIVIDE ( [Labour Hours] - [Tender Labour Hours], [Tender Labour Hours] )
+
+Jobs Completed = CALCULATE ( DISTINCTCOUNT ( dim_job[job_ref] ), dim_job[status] = "Completed" )
+
+Jobs Over Tender 10% =
+VAR jobs = ADDCOLUMNS ( VALUES ( dim_job[job_ref] ), "ratio", [Actual vs Tender %] )
+RETURN DIVIDE ( COUNTROWS ( FILTER ( jobs, [ratio] > 0.10 ) ), COUNTROWS ( jobs ) )
+
+Material Spend GBP = SUM ( fact_material[cost_gbp] )
+
+Labour Cost GBP = SUM ( fact_cost[cost_gbp] )

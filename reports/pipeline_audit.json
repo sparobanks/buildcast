@@ -1,0 +1,187 @@
+{
+  "before_review": {
+    "bc_job_matching": {
+      "jobs": 1100,
+      "matched": 1085,
+      "matched_correctly": 1085,
+      "wrong_matches": 0,
+      "left_for_review": 15
+    },
+    "material_identification": {
+      "po_lines": 20483,
+      "held_for_review": 3042,
+      "silently_wrong": 0,
+      "familiar_wording": {
+        "lines": 17441,
+        "material_correct": 1.0,
+        "quantity_correct": 1.0
+      },
+      "unseen_wording": {
+        "lines": 3042,
+        "material_correct": 0.0,
+        "quantity_correct": 0.6197
+      }
+    },
+    "job_totals_vs_truth": {
+      "electrical_hours": {
+        "median_abs_pct_error": 0.37,
+        "jobs_within_2pct": 0.958
+      },
+      "mechanical_hours": {
+        "median_abs_pct_error": 0.19,
+        "jobs_within_2pct": 0.958
+      },
+      "cable_m": {
+        "median_abs_pct_error": 7.27,
+        "jobs_within_2pct": 0.385
+      },
+      "pipework_m": {
+        "median_abs_pct_error": 0.53,
+        "jobs_within_2pct": 0.578
+      }
+    }
+  },
+  "review": {
+    "distinct_descriptions": 16,
+    "lines_covered": 3042
+  },
+  "after_review": {
+    "bc_job_matching": {
+      "jobs": 1100,
+      "matched": 1085,
+      "matched_correctly": 1085,
+      "wrong_matches": 0,
+      "left_for_review": 15
+    },
+    "material_identification": {
+      "po_lines": 20483,
+      "held_for_review": 0,
+      "silently_wrong": 0,
+      "familiar_wording": {
+        "lines": 17441,
+        "material_correct": 1.0,
+        "quantity_correct": 1.0
+      },
+      "unseen_wording": {
+        "lines": 3042,
+        "material_correct": 1.0,
+        "quantity_correct": 1.0
+      }
+    },
+    "job_totals_vs_truth": {
+      "electrical_hours": {
+        "median_abs_pct_error": 0.37,
+        "jobs_within_2pct": 0.958
+      },
+      "mechanical_hours": {
+        "median_abs_pct_error": 0.19,
+        "jobs_within_2pct": 0.958
+      },
+      "cable_m": {
+        "median_abs_pct_error": 0.06,
+        "jobs_within_2pct": 0.999
+      },
+      "pipework_m": {
+        "median_abs_pct_error": 0.11,
+        "jobs_within_2pct": 0.969
+      }
+    }
+  },
+  "data_quality_log": [
+    {
+      "source": "business_central",
+      "rule": "ledger cost converted EUR -> GBP",
+      "rows": 2246
+    },
+    {
+      "source": "business_central",
+      "rule": "ledger entries fetched (full)",
+      "rows": 9756
+    },
+    {
+      "source": "business_central",
+      "rule": "matched on project name + start date (no reference in BC)",
+      "rows": 60
+    },
+    {
+      "source": "business_central",
+      "rule": "matched on tracker reference",
+      "rows": 1025
+    },
+    {
+      "source": "business_central",
+      "rule": "no confident match (left for manual review)",
+      "rows": 15
+    },
+    {
+      "source": "job_tracker",
+      "rule": "date format standardised (dd/mm/yyyy -> ISO)",
+      "rows": 655
+    },
+    {
+      "source": "job_tracker",
+      "rule": "exact duplicate rows removed",
+      "rows": 22
+    },
+    {
+      "source": "job_tracker",
+      "rule": "floor area converted from sq ft to m2",
+      "rows": 172
+    },
+    {
+      "source": "job_tracker",
+      "rule": "sector spelling standardised",
+      "rows": 754
+    },
+    {
+      "source": "job_tracker",
+      "rule": "tender value converted EUR -> GBP",
+      "rows": 260
+    },
+    {
+      "source": "purchasing",
+      "rule": "cost converted EUR -> GBP",
+      "rows": 4790
+    },
+    {
+      "source": "purchasing",
+      "rule": "job code reformatted",
+      "rows": 4103
+    },
+    {
+      "source": "purchasing",
+      "rule": "material from reviewer's mapping table",
+      "rows": 3042
+    },
+    {
+      "source": "purchasing",
+      "rule": "material identified by keyword rule",
+      "rows": 17441
+    },
+    {
+      "source": "purchasing",
+      "rule": "pack/drum/length quantities converted to base units",
+      "rows": 7122
+    },
+    {
+      "source": "timesheets",
+      "rule": "duplicate submissions removed",
+      "rows": 6754
+    },
+    {
+      "source": "timesheets",
+      "rule": "job code not found in tracker (quarantined)",
+      "rows": 8
+    },
+    {
+      "source": "timesheets",
+      "rule": "job code reformatted to MEP-YYYY-NNNN",
+      "rows": 233968
+    },
+    {
+      "source": "timesheets",
+      "rule": "zero or negative hours quarantined",
+      "rows": 1562
+    }
+  ]
+}

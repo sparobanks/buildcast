@@ -1,0 +1,6 @@
+data/raw/
+data/truth/
+data/review/
+__pycache__/
+*.pyc
+.pytest_cache/
