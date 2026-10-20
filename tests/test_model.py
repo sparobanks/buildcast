@@ -29,3 +29,29 @@ def test_cue_cards(small_company):
     d, _ = small_company
     cards = cue_cards(job_summary(d / "warehouse.db"))
     assert "Jobs completed" in cards and cards["Jobs completed"] != "0"
+
+
+def test_power_bi_project_references_real_columns():
+    import json
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent / "powerbi"
+    model = json.loads((root / "BuildCast.SemanticModel" / "model.bim").read_text())["model"]
+    cols = {(t["name"], c["name"]) for t in model["tables"] for c in t["columns"]}
+    measures = {m["name"] for t in model["tables"] for m in t.get("measures", [])}
+    for r in model["relationships"]:
+        assert (r["fromTable"], r["fromColumn"]) in cols and (r["toTable"], r["toColumn"]) in cols
+    for t in model["tables"]:
+        for m in t.get("measures", []):
+            for table, col in re.findall(r"(\w+)\[([^\]]+)\]", m["expression"]):
+                assert (table, col) in cols, (m["name"], table, col)
+            for ref in re.findall(r"(?<![\w\]])\[([^\]]+)\]", m["expression"]):
+                assert ref in measures or ref == "ratio", (m["name"], ref)
+    report = json.loads((root / "BuildCast.Report" / "report.json").read_text())
+    for vc in report["sections"][0]["visualContainers"]:
+        cfg = json.loads(vc["config"])
+        for sel in cfg["singleVisual"].get("prototypeQuery", {}).get("Select", []):
+            entity = sel["Name"].split(".")[0]
+            prop = sel.get("Column", sel.get("Measure"))["Property"]
+            assert (entity, prop) in cols or prop in measures, sel["Name"]

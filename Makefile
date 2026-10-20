@@ -7,8 +7,9 @@ pipeline:   ## integrate into the SQL warehouse, review queue, audit against the
 model:      ## train and test the forecasting models
 	python scripts/train.py
 
-powerbi:    ## export the star schema for Power BI
+powerbi:    ## export the star schema and build the Power BI project
 	python scripts/export_powerbi.py
+	python scripts/build_pbip.py
 
 figures:
 	python scripts/figures.py

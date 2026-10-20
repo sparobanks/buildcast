@@ -115,8 +115,9 @@ did **88%** of the time for electrical hours and **90%** for mechanical hours. A
 
 ![Dashboard](docs/img/app_dashboard.png)
 
-The same figures are exported as a **Power BI** star schema, with the measures and a step-by-step guide in
-[`powerbi/`](powerbi/README.md).
+The same figures come as a ready-made **Power BI report**: open [`powerbi/BuildCast.pbip`](powerbi/README.md) in
+Power BI Desktop, point it at the data folder and refresh. It contains the star-schema model (7 tables, 8
+relationships), 9 KPI measures in DAX, and an overview page with KPI cards, charts and slicers.
 
 ![Data quality](docs/img/app_data_quality.png)
 
@@ -145,7 +146,7 @@ make test   # 20 automatic checks, also run on every update
 | **Data quality** | What the pipeline fixed, held back or couldn't match |
 | **How it works** | The data-flow map |
 
-Guides: [training guide for estimators](docs/training_guide.md) · [Power BI guide](powerbi/README.md)
+Guides: [training guide for estimators](docs/training_guide.md) · [Power BI report and guide](powerbi/README.md)
 
 ---
 
@@ -158,7 +159,7 @@ Guides: [training guide for estimators](docs/training_guide.md) · [Power BI gui
 | Business Central | FastAPI mock of OData v4 web services (`$top`/`$skip`, `@odata.nextLink`, `$filter` on modified date); client with incremental sync and a stored watermark |
 | Models | per target, log-linear (ridge) and gradient boosting compared on 2023 jobs, the better one kept; split-conformal 90% ranges calibrated on 2023 jobs |
 | Explanation | the five most similar past jobs (same sector and scope; nearest on size, floors, work type, spec, region) |
-| App | Streamlit + Altair; Power BI pack (CSV star schema, DAX measures) |
+| App and reporting | Streamlit + Altair; Power BI Project (PBIP): semantic model with DAX measures and a KPI report page |
 
 ### Project structure
 
@@ -172,7 +173,7 @@ buildcast/
 │   └── kpis.py         KPI cards and summaries
 ├── scripts/            run_pipeline, train, export_powerbi, figures, simulate_reviewer
 ├── app/app.py          estimator app and dashboard
-├── powerbi/            star schema CSVs, DAX measures, build guide
+├── powerbi/            Power BI project (BuildCast.pbip), star schema CSVs, DAX measures, guide
 ├── config/             exchange rates, labour rate, reviewed material mappings
 ├── data/warehouse.db   the integrated database (raw files rebuild with `make data`)
 ├── models/             trained forecaster

@@ -1,0 +1,581 @@
+{
+  "name": "BuildCast",
+  "compatibilityLevel": 1550,
+  "model": {
+    "culture": "en-GB",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "tables": [
+      {
+        "name": "dim_job",
+        "columns": [
+          {
+            "name": "job_ref",
+            "dataType": "string",
+            "sourceColumn": "job_ref",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "project_name",
+            "dataType": "string",
+            "sourceColumn": "project_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "client",
+            "dataType": "string",
+            "sourceColumn": "client",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "sector",
+            "dataType": "string",
+            "sourceColumn": "sector",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "work_type",
+            "dataType": "string",
+            "sourceColumn": "work_type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "gia_m2",
+            "dataType": "double",
+            "sourceColumn": "gia_m2",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "floors",
+            "dataType": "int64",
+            "sourceColumn": "floors",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "spec",
+            "dataType": "string",
+            "sourceColumn": "spec",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "package",
+            "dataType": "string",
+            "sourceColumn": "package",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "sprinklers",
+            "dataType": "int64",
+            "sourceColumn": "sprinklers",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "occupied",
+            "dataType": "int64",
+            "sourceColumn": "occupied",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "offsite_pct",
+            "dataType": "double",
+            "sourceColumn": "offsite_pct",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "start_date",
+            "dataType": "dateTime",
+            "sourceColumn": "start_date",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "planned_weeks",
+            "dataType": "int64",
+            "sourceColumn": "planned_weeks",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tender_electrical_hours",
+            "dataType": "int64",
+            "sourceColumn": "tender_electrical_hours",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "tender_mechanical_hours",
+            "dataType": "int64",
+            "sourceColumn": "tender_mechanical_hours",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "tender_value_gbp",
+            "dataType": "double",
+            "sourceColumn": "tender_value_gbp",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "status",
+            "dataType": "string",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "bc_job_no",
+            "dataType": "string",
+            "sourceColumn": "bc_job_no",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "start_year",
+            "dataType": "int64",
+            "sourceColumn": "start_year",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_job",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"dim_job.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"job_ref\", type text}, {\"project_name\", type text}, {\"client\", type text}, {\"sector\", type text}, {\"region\", type text}, {\"work_type\", type text}, {\"gia_m2\", type number}, {\"floors\", Int64.Type}, {\"spec\", type text}, {\"package\", type text}, {\"sprinklers\", Int64.Type}, {\"occupied\", Int64.Type}, {\"offsite_pct\", type number}, {\"start_date\", type date}, {\"planned_weeks\", Int64.Type}, {\"tender_electrical_hours\", Int64.Type}, {\"tender_mechanical_hours\", Int64.Type}, {\"tender_value_gbp\", type number}, {\"status\", type text}, {\"bc_job_no\", type text}, {\"start_year\", Int64.Type}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Labour Hours",
+            "expression": "SUM ( fact_labour[hours] )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Floor Area m2",
+            "expression": "SUM ( dim_job[gia_m2] )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Labour Hours per m2",
+            "expression": "CALCULATE ( DIVIDE ( [Labour Hours], [Floor Area m2] ), dim_job[status] = \"Completed\" )",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Tender Labour Hours",
+            "expression": "SUM ( dim_job[tender_electrical_hours] ) + SUM ( dim_job[tender_mechanical_hours] )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Actual vs Tender %",
+            "expression": "VAR actual = CALCULATE ( [Labour Hours], dim_job[status] = \"Completed\" )\nVAR tender = CALCULATE ( [Tender Labour Hours], dim_job[status] = \"Completed\" )\nRETURN DIVIDE ( actual - tender, tender )",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Jobs Completed",
+            "expression": "CALCULATE ( DISTINCTCOUNT ( dim_job[job_ref] ), dim_job[status] = \"Completed\" )",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Jobs Over Tender 10%",
+            "expression": "VAR jobs = ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_job[job_ref] ), dim_job[status] = \"Completed\" ), \"ratio\", [Actual vs Tender %] )\nRETURN DIVIDE ( COUNTROWS ( FILTER ( jobs, [ratio] > 0.10 ) ), COUNTROWS ( jobs ) )",
+            "formatString": "0%"
+          },
+          {
+            "name": "Material Spend GBP",
+            "expression": "SUM ( fact_material[cost_gbp] )",
+            "formatString": "\u00a3#,0"
+          },
+          {
+            "name": "Labour Cost GBP",
+            "expression": "SUM ( fact_cost[cost_gbp] )",
+            "formatString": "\u00a3#,0"
+          }
+        ]
+      },
+      {
+        "name": "dim_trade",
+        "columns": [
+          {
+            "name": "trade",
+            "dataType": "string",
+            "sourceColumn": "trade",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "trade_group",
+            "dataType": "string",
+            "sourceColumn": "trade_group",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_trade",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"dim_trade.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"trade\", type text}, {\"trade_group\", type text}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_material",
+        "columns": [
+          {
+            "name": "material",
+            "dataType": "string",
+            "sourceColumn": "material",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "unit",
+            "dataType": "string",
+            "sourceColumn": "unit",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "description",
+            "dataType": "string",
+            "sourceColumn": "description",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_material",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"dim_material.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"material\", type text}, {\"unit\", type text}, {\"description\", type text}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_date",
+        "columns": [
+          {
+            "name": "date",
+            "dataType": "dateTime",
+            "sourceColumn": "date",
+            "summarizeBy": "none",
+            "formatString": "Short Date",
+            "isKey": true
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "month",
+            "dataType": "string",
+            "sourceColumn": "month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "quarter",
+            "dataType": "string",
+            "sourceColumn": "quarter",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_date",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"dim_date.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"date\", type date}, {\"year\", Int64.Type}, {\"month\", type text}, {\"quarter\", type text}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "dataCategory": "Time"
+      },
+      {
+        "name": "fact_labour",
+        "columns": [
+          {
+            "name": "job_ref",
+            "dataType": "string",
+            "sourceColumn": "job_ref",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "trade",
+            "dataType": "string",
+            "sourceColumn": "trade",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "week_ending",
+            "dataType": "dateTime",
+            "sourceColumn": "week_ending",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "hours",
+            "dataType": "double",
+            "sourceColumn": "hours",
+            "summarizeBy": "sum"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_labour",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"fact_labour.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"job_ref\", type text}, {\"trade\", type text}, {\"week_ending\", type date}, {\"hours\", type number}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fact_material",
+        "columns": [
+          {
+            "name": "po",
+            "dataType": "string",
+            "sourceColumn": "po",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "job_ref",
+            "dataType": "string",
+            "sourceColumn": "job_ref",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "supplier",
+            "dataType": "string",
+            "sourceColumn": "supplier",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "material",
+            "dataType": "string",
+            "sourceColumn": "material",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "quantity",
+            "dataType": "double",
+            "sourceColumn": "quantity",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "cost_gbp",
+            "dataType": "double",
+            "sourceColumn": "cost_gbp",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "order_date",
+            "dataType": "dateTime",
+            "sourceColumn": "order_date",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "description",
+            "dataType": "string",
+            "sourceColumn": "description",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_material",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"fact_material.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"po\", type text}, {\"job_ref\", type text}, {\"supplier\", type text}, {\"material\", type text}, {\"quantity\", type number}, {\"cost_gbp\", type number}, {\"order_date\", type date}, {\"description\", type text}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fact_cost",
+        "columns": [
+          {
+            "name": "entry_no",
+            "dataType": "int64",
+            "sourceColumn": "entry_no",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "job_ref",
+            "dataType": "string",
+            "sourceColumn": "job_ref",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "posting_date",
+            "dataType": "dateTime",
+            "sourceColumn": "posting_date",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "type",
+            "dataType": "string",
+            "sourceColumn": "type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "quantity",
+            "dataType": "double",
+            "sourceColumn": "quantity",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "cost_gbp",
+            "dataType": "double",
+            "sourceColumn": "cost_gbp",
+            "summarizeBy": "sum"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_cost",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"fact_cost.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"entry_no\", Int64.Type}, {\"job_ref\", type text}, {\"posting_date\", type date}, {\"type\", type text}, {\"quantity\", type number}, {\"cost_gbp\", type number}}, \"en-GB\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "1de68ddc-7016-5ee7-93d3-931cfccf1dc7",
+        "fromTable": "fact_labour",
+        "fromColumn": "job_ref",
+        "toTable": "dim_job",
+        "toColumn": "job_ref"
+      },
+      {
+        "name": "ede8e837-27a5-579e-b74d-e874cc9fb804",
+        "fromTable": "fact_material",
+        "fromColumn": "job_ref",
+        "toTable": "dim_job",
+        "toColumn": "job_ref"
+      },
+      {
+        "name": "20cae6ca-b957-57a4-8610-221efda9b91c",
+        "fromTable": "fact_cost",
+        "fromColumn": "job_ref",
+        "toTable": "dim_job",
+        "toColumn": "job_ref"
+      },
+      {
+        "name": "00e4beb1-8def-5c4c-8cec-2f1976621a5a",
+        "fromTable": "fact_labour",
+        "fromColumn": "trade",
+        "toTable": "dim_trade",
+        "toColumn": "trade"
+      },
+      {
+        "name": "d9255d7c-bf4a-5f75-b928-ec9291dda542",
+        "fromTable": "fact_material",
+        "fromColumn": "material",
+        "toTable": "dim_material",
+        "toColumn": "material"
+      },
+      {
+        "name": "9c6b65ac-0585-51ea-9456-c3038c85bf74",
+        "fromTable": "fact_labour",
+        "fromColumn": "week_ending",
+        "toTable": "dim_date",
+        "toColumn": "date"
+      },
+      {
+        "name": "2f580e0a-2a03-5134-8883-47c84e318c14",
+        "fromTable": "fact_material",
+        "fromColumn": "order_date",
+        "toTable": "dim_date",
+        "toColumn": "date"
+      },
+      {
+        "name": "b80784af-3edd-5090-abf5-92b0c834f36a",
+        "fromTable": "fact_cost",
+        "fromColumn": "posting_date",
+        "toTable": "dim_date",
+        "toColumn": "date"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DataFolder",
+        "kind": "m",
+        "expression": "\"C:\\BuildCast\\powerbi\\data\\\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DataFolder\", \"dim_job\", \"dim_trade\", \"dim_material\", \"dim_date\", \"fact_labour\", \"fact_material\", \"fact_cost\"]"
+      }
+    ]
+  }
+}

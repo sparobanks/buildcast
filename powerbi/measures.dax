@@ -1,21 +1,31 @@
-// BuildCast KPI measures for Power BI. Relationships are listed in powerbi/README.md.
+// BuildCast KPI measures (also defined in the Power BI project's semantic model).
 
-Labour Hours = SUM ( fact_labour[hours] )
+Labour Hours =
+SUM ( fact_labour[hours] )
 
-Floor Area m2 = SUM ( dim_job[gia_m2] )
+Floor Area m2 =
+SUM ( dim_job[gia_m2] )
 
-Labour Hours per m2 = DIVIDE ( [Labour Hours], [Floor Area m2] )
+Labour Hours per m2 =
+CALCULATE ( DIVIDE ( [Labour Hours], [Floor Area m2] ), dim_job[status] = "Completed" )
 
-Tender Labour Hours = SUM ( dim_job[tender_electrical_hours] ) + SUM ( dim_job[tender_mechanical_hours] )
+Tender Labour Hours =
+SUM ( dim_job[tender_electrical_hours] ) + SUM ( dim_job[tender_mechanical_hours] )
 
-Actual vs Tender % = DIVIDE ( [Labour Hours] - [Tender Labour Hours], [Tender Labour Hours] )
+Actual vs Tender % =
+VAR actual = CALCULATE ( [Labour Hours], dim_job[status] = "Completed" )
+VAR tender = CALCULATE ( [Tender Labour Hours], dim_job[status] = "Completed" )
+RETURN DIVIDE ( actual - tender, tender )
 
-Jobs Completed = CALCULATE ( DISTINCTCOUNT ( dim_job[job_ref] ), dim_job[status] = "Completed" )
+Jobs Completed =
+CALCULATE ( DISTINCTCOUNT ( dim_job[job_ref] ), dim_job[status] = "Completed" )
 
 Jobs Over Tender 10% =
-VAR jobs = ADDCOLUMNS ( VALUES ( dim_job[job_ref] ), "ratio", [Actual vs Tender %] )
+VAR jobs = ADDCOLUMNS ( CALCULATETABLE ( VALUES ( dim_job[job_ref] ), dim_job[status] = "Completed" ), "ratio", [Actual vs Tender %] )
 RETURN DIVIDE ( COUNTROWS ( FILTER ( jobs, [ratio] > 0.10 ) ), COUNTROWS ( jobs ) )
 
-Material Spend GBP = SUM ( fact_material[cost_gbp] )
+Material Spend GBP =
+SUM ( fact_material[cost_gbp] )
 
-Labour Cost GBP = SUM ( fact_cost[cost_gbp] )
+Labour Cost GBP =
+SUM ( fact_cost[cost_gbp] )
